@@ -1,0 +1,146 @@
+{
+  "jatai": {
+    "workerUrl": "https://static.inaturalist.org/photos/142232963/large.jpeg",
+    "workerAttr": "(c) Richard Araya Villalobos, all rights reserved",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/151637508/large.jpg",
+    "entryAttr": "(c) Grete Pasch, some rights reserved (CC BY)"
+  },
+  "jatai_fiebrigi": {
+    "workerUrl": "https://static.inaturalist.org/photos/453365194/large.jpg",
+    "workerAttr": "(c) Kyle Scholz, all rights reserved",
+    "entryUrl": "https://static.inaturalist.org/photos/453365209/large.jpg",
+    "entryAttr": "(c) Kyle Scholz, all rights reserved"
+  },
+  "mandacaia_mqq": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/698266958/large.jpg",
+    "workerAttr": "(c) Nicollas Michels, some rights reserved (CC BY-SA)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/599878336/large.jpg",
+    "entryAttr": "(c) Douglas Alencar Gass, some rights reserved (CC BY-NC)"
+  },
+  "mandaçaia": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/117402025/large.jpeg",
+    "workerAttr": "(c) Lucas Rubio, some rights reserved (CC BY)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/526190481/large.jpg",
+    "entryAttr": "(c) amwendt, some rights reserved (CC BY-NC)"
+  },
+  "guaraipo": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/566914418/large.jpg",
+    "workerAttr": "(c) Will Godoy, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://static.inaturalist.org/photos/308381266/large.jpeg",
+    "entryAttr": "(c) Cainã Souza Leite, all rights reserved"
+  },
+  "guarupu": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/60841607/large.jpg",
+    "workerAttr": "(c) Arthur Gomes, some rights reserved (CC BY-NC-SA)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/128804280/large.jpeg",
+    "entryAttr": "(c) Guilherme A. Fischer, some rights reserved (CC BY-NC)"
+  },
+  "manduri": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/168553108/large.jpg",
+    "workerAttr": "no rights reserved",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/470584868/large.jpeg",
+    "entryAttr": "(c) Cristiane Bolochio, some rights reserved (CC BY-NC)"
+  },
+  "tubuna": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/343694198/large.jpeg",
+    "workerAttr": "(c) Carlos Alexandre Mattos Raposo, some rights reserved (CC BY-SA)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/343700143/large.jpeg",
+    "entryAttr": "(c) Carlos Alexandre Mattos Raposo, some rights reserved (CC BY-SA)"
+  },
+  "canudo": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/58169475/large.jpg",
+    "workerAttr": "(c) Ísis Meri Medri, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/357493331/large.jpeg",
+    "entryAttr": "(c) Elise (Toti), some rights reserved (CC BY-NC)"
+  },
+  "irai": {
+    "workerUrl": "https://static.inaturalist.org/photos/88643909/large.jpg",
+    "workerAttr": "(c) Rodolfo Guimarães Vieira da Silva, all rights reserved",
+    "entryUrl": "https://static.inaturalist.org/photos/30062028/large.jpg",
+    "entryAttr": "(c) Bruno Ferreira Uchoa, all rights reserved"
+  },
+  "bora": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/347983533/large.jpeg",
+    "workerAttr": "(c) Vitor C. Dias Gonçalves, some rights reserved (CC BY)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/347983562/large.jpeg",
+    "entryAttr": "(c) Vitor C. Dias Gonçalves, some rights reserved (CC BY-NC)"
+  },
+  "mirim_droriana": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/481331768/large.jpeg",
+    "workerAttr": "(c) Carlos Alexandre Mattos Raposo, some rights reserved (CC BY-SA)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/481335265/large.jpeg",
+    "entryAttr": "(c) Carlos Alexandre Mattos Raposo, some rights reserved (CC BY-SA)"
+  },
+  "mirim_emerina": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/33865085/large.jpg",
+    "workerAttr": "(c) selwynq, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/156567036/large.jpg",
+    "entryAttr": "(c) Robin Gwen Agarwal, some rights reserved (CC BY-NC)"
+  },
+  "mirim_guaçu": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/603952616/large.jpg",
+    "workerAttr": "(c) Victor Hugo Rebecchi Siqueira, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://static.inaturalist.org/photos/415461429/large.jpeg",
+    "entryAttr": "(c) Cristiano Maddalena, all rights reserved"
+  },
+  "iratim": {
+    "workerUrl": "https://static.inaturalist.org/photos/252655724/large.jpeg",
+    "workerAttr": "(c) Matheus Saad Machado, all rights reserved",
+    "entryUrl": "https://static.inaturalist.org/photos/252655739/large.jpeg",
+    "entryAttr": "(c) Matheus Saad Machado, all rights reserved"
+  },
+  "irapua": {
+    "workerUrl": "https://static.inaturalist.org/photos/578253208/large.jpg",
+    "workerAttr": "(c) Inacio Oliveira, all rights reserved",
+    "entryUrl": "https://static.inaturalist.org/photos/578257109/large.jpg",
+    "entryAttr": "(c) Inacio Oliveira, all rights reserved"
+  },
+  "bieira": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/108345910/large.jpg",
+    "workerAttr": "(c) Andrès Costa, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/108345875/large.jpg",
+    "entryAttr": "(c) Andrès Costa, some rights reserved (CC BY-NC)"
+  },
+  "uruçu_nordestina": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/456005855/large.jpg",
+    "workerAttr": "(c) Gabriela Piovesan, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/348489464/large.jpg",
+    "entryAttr": "(c) Gabriela Piovesan, some rights reserved (CC BY-NC)"
+  },
+  "jandaira": {
+    "workerUrl": "https://static.inaturalist.org/photos/642464587/large.jpg",
+    "workerAttr": "(c) José Vinícius de Medeiros, all rights reserved",
+    "entryUrl": "https://static.inaturalist.org/photos/642470436/large.jpg",
+    "entryAttr": "(c) José Vinícius de Medeiros, all rights reserved"
+  },
+  "tiuba": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/482188721/large.jpeg",
+    "workerAttr": "(c) Rafaele Fogaça Muniz 🐝, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/482188752/large.jpeg",
+    "entryAttr": "(c) Rafaele Fogaça Muniz 🐝, some rights reserved (CC BY-NC)"
+  },
+  "bugia": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/707259632/large.jpg",
+    "workerAttr": "(c) Nicollas Michels, some rights reserved (CC BY-SA)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/707259836/large.jpg",
+    "entryAttr": "(c) Nicollas Michels, some rights reserved (CC BY-SA)"
+  },
+  "marmelada": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/679143441/large.jpg",
+    "workerAttr": "(c) geraldomorais, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/679474795/large.jpg",
+    "entryAttr": "(c) geraldomorais, some rights reserved (CC BY-NC)"
+  },
+  "lambe_olhos": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/532504891/large.jpg",
+    "workerAttr": "(c) Bruno Henrique Aranda, some rights reserved (CC BY)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/506802174/large.jpg",
+    "entryAttr": "(c) Marcelo Bellini Lucas, some rights reserved (CC BY-NC)"
+  },
+  "mombuca": {
+    "workerUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/505929020/large.jpg",
+    "workerAttr": "(c) jbio, some rights reserved (CC BY-NC)",
+    "entryUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/420490237/large.jpg",
+    "entryAttr": "(c) Davidson Moreira, some rights reserved (CC BY)"
+  }
+}

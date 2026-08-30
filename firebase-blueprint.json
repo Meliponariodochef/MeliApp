@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Perfil de Usuário",
+      "description": "Dados do usuário meliponicultor ou administrador",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "meliponicultor"] },
+        "meliponaryName": { "type": "string" },
+        "cityState": { "type": "string" },
+        "phoneWhatsapp": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "MarketplaceProduct": {
+      "title": "Produto do Marketplace",
+      "description": "Itens, mudas, caixas, enxames e materiais gerenciados pelo administrador",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "priceBrl": { "type": "number" },
+        "originalPriceBrl": { "type": "number" },
+        "unit": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "sellerCityState": { "type": "string" },
+        "sellerPhoneWhatsapp": { "type": "string" },
+        "sellerEmail": { "type": "string" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "condition": { "type": "string" },
+        "deliveryOptions": { "type": "array" },
+        "isAffiliate": { "type": "boolean" },
+        "affiliatePlatform": { "type": "string" },
+        "affiliateUrl": { "type": "string" },
+        "discountCoupon": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["title", "category", "priceBrl"]
+    },
+    "UserHive": {
+      "title": "Colmeia do Usuário",
+      "description": "Colmeia / enxame registrado pelo meliponicultor",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "speciesId": { "type": "string" },
+        "meliponaryId": { "type": "string" },
+        "boxModel": { "type": "string" },
+        "strength": { "type": "number" },
+        "status": { "type": "string" },
+        "installationDate": { "type": "string" }
+      },
+      "required": ["code", "speciesId"]
+    }
+  },
+  "firestore": {
+    "collections": {
+      "/users/{userId}": {
+        "schema": "UserProfile",
+        "description": "Perfis individuais dos usuários"
+      },
+      "/users/{userId}/meliponaries/{id}": {
+        "description": "Meliponários do usuário"
+      },
+      "/users/{userId}/hives/{id}": {
+        "schema": "UserHive",
+        "description": "Colmeias do usuário"
+      },
+      "/users/{userId}/harvests/{id}": {
+        "description": "Colheitas registradas pelo usuário"
+      },
+      "/users/{userId}/inspections/{id}": {
+        "description": "Inspeções realizadas pelo usuário"
+      },
+      "/users/{userId}/feedings/{id}": {
+        "description": "Alimentações registradas pelo usuário"
+      },
+      "/users/{userId}/divisions/{id}": {
+        "description": "Divisões registradas pelo usuário"
+      },
+      "/users/{userId}/traps/{id}": {
+        "description": "Iscas e ninhos-isca do usuário"
+      },
+      "/users/{userId}/reminders/{id}": {
+        "description": "Lembretes e tarefas do usuário"
+      },
+      "/users/{userId}/flora/{id}": {
+        "description": "Espécies da flora personalizadas pelo usuário"
+      },
+      "/marketplace_items/{id}": {
+        "schema": "MarketplaceProduct",
+        "description": "Catálogo do Marketplace alimentado exclusivamente pelo administrador"
+      }
+    }
+  }
+}

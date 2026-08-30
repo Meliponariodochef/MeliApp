@@ -1,0 +1,6 @@
+{
+  "name": "Gestão de Meliponários e Produção",
+  "description": "Aplicativo completo para gerenciamento de meliponários, colmeias de abelhas sem ferrão, controle de produção, flora meliponófila e marketplace com mudas, sementes e produtos afiliados.",
+  "requestFramePermissions": ["camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

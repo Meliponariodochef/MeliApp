@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check authentication
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check owner of user profile or subcollections
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Helper function to check if current user is admin
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'andreneutz@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+    
+    // User profile document and all user isolated subcollections
+    match /users/{userId} {
+      allow read: if isAuthenticated() || isOwner(userId);
+      allow create, update: if isOwner(userId) || isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      allow delete: if isAdmin() || isOwner(userId);
+      
+      // User isolated subcollections (meliponaries, hives, harvests, inspections, feedings, divisions, traps, reminders, flora, etc.)
+      match /{allSubcollections=**} {
+        allow read, write: if isOwner(userId) || (isAuthenticated() && request.auth.uid == userId) || isAdmin();
+      }
+    }
+    
+    // Connection health check
+    match /test/{id} {
+      allow read, write: if true;
+    }
+
+    // Marketplace catalog - Read by everyone, written by authenticated users / admins
+    match /marketplace_items/{itemId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || isAdmin();
+    }
+    
+    // Default fallback
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
