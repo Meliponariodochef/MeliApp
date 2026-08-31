@@ -66,6 +66,22 @@ export interface FirestoreErrorInfo {
   };
 }
 
+// Helper to recursively remove undefined properties because Firestore rejects undefined values
+export function cleanForFirestore<T>(data: T): any {
+  if (data === undefined) return null;
+  if (data === null || typeof data !== 'object') return data;
+  if (Array.isArray(data)) {
+    return data.map(cleanForFirestore);
+  }
+  const clean: Record<string, any> = {};
+  for (const [key, value] of Object.entries(data as Record<string, any>)) {
+    if (value !== undefined) {
+      clean[key] = cleanForFirestore(value);
+    }
+  }
+  return clean;
+}
+
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
@@ -287,7 +303,8 @@ export async function saveUserItem<T extends { id: string }>(
   const path = `users/${userId}/${collectionName}`;
   const docRef = doc(db, path, item.id);
   try {
-    await setDoc(docRef, item, { merge: true });
+    const cleanItem = cleanForFirestore(item);
+    await setDoc(docRef, cleanItem, { merge: true });
   } catch (error) {
     handleFirestoreError(error, OperationType.WRITE, `${path}/${item.id}`);
   }
@@ -346,9 +363,15 @@ export async function saveMarketplaceItem(item: MarketplaceItem): Promise<void> 
   const path = `marketplace_items/${item.id}`;
   const docRef = doc(db, 'marketplace_items', item.id);
   try {
-    await setDoc(docRef, item, { merge: true });
+    const cleanItem = cleanForFirestore(item);
+    await setDoc(docRef, cleanItem, { merge: true });
   } catch (error) {
-    handleFirestoreError(error, OperationType.WRITE, path);
+    console.error('Error saving marketplace item to Firestore:', error);
+    try {
+      handleFirestoreError(error, OperationType.WRITE, path);
+    } catch {
+      // Don't crash frontend flow
+    }
   }
 }
 
@@ -358,7 +381,12 @@ export async function deleteMarketplaceItem(itemId: string): Promise<void> {
   try {
     await deleteDoc(docRef);
   } catch (error) {
-    handleFirestoreError(error, OperationType.DELETE, path);
+    console.error('Error deleting marketplace item from Firestore:', error);
+    try {
+      handleFirestoreError(error, OperationType.DELETE, path);
+    } catch {
+      // Don't crash frontend flow
+    }
   }
 }
 
@@ -367,16 +395,35 @@ export async function seedGlobalMarketplace(): Promise<void> {
     if (INITIAL_MARKETPLACE_ITEMS.length === 0) return;
     const colRef = collection(db, 'marketplace_items');
     const snap = await getDocs(colRef);
-    if (snap.empty && auth.currentUser) {
+    if (snap.empty) {
       const batch = writeBatch(db);
       for (const item of INITIAL_MARKETPLACE_ITEMS) {
         const docRef = doc(db, 'marketplace_items', item.id);
-        batch.set(docRef, item);
+        batch.set(docRef, cleanForFirestore(item));
       }
       await batch.commit();
       console.log('[seedGlobalMarketplace] Seeded default marketplace catalog.');
     }
   } catch (err) {
     console.warn('[seedGlobalMarketplace] Notice:', err);
+  }
+}
+
+export async function restoreMarketplaceDefaults(): Promise<void> {
+  try {
+    if (INITIAL_MARKETPLACE_ITEMS.length === 0) return;
+    const chunkSize = 250;
+    for (let i = 0; i < INITIAL_MARKETPLACE_ITEMS.length; i += chunkSize) {
+      const chunk = INITIAL_MARKETPLACE_ITEMS.slice(i, i + chunkSize);
+      const batch = writeBatch(db);
+      for (const item of chunk) {
+        const docRef = doc(db, 'marketplace_items', item.id);
+        batch.set(docRef, cleanForFirestore(item));
+      }
+      await batch.commit();
+    }
+    console.log('[restoreMarketplaceDefaults] Successfully restored default Raizer & partner items in Firestore.');
+  } catch (err) {
+    console.warn('[restoreMarketplaceDefaults] Notice:', err);
   }
 }

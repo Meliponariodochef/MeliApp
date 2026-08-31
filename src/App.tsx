@@ -54,7 +54,8 @@ import {
   deleteUserItem,
   subscribeMarketplaceItems,
   saveMarketplaceItem,
-  deleteMarketplaceItem
+  deleteMarketplaceItem,
+  restoreMarketplaceDefaults
 } from './services/firestoreService';
 
 function MeliponaryApp() {
@@ -114,19 +115,50 @@ function MeliponaryApp() {
 
   const [marketplaceItems, setMarketplaceItems] = useState<MarketplaceItem[]>(() => {
     const saved = localStorage.getItem('meliapp_marketplace');
+    const initialMap = new Map(INITIAL_MARKETPLACE_ITEMS.map(i => [i.id, i]));
+    let deletedIds = new Set<string>();
+    try {
+      const rawDeleted = localStorage.getItem('meliapp_marketplace_deleted');
+      if (rawDeleted) {
+        const parsedDel = JSON.parse(rawDeleted);
+        if (Array.isArray(parsedDel)) deletedIds = new Set(parsedDel);
+      }
+    } catch {}
+
+    const itemMap = new Map<string, MarketplaceItem>();
+    INITIAL_MARKETPLACE_ITEMS.forEach(i => {
+      if (!deletedIds.has(i.id)) itemMap.set(i.id, i);
+    });
+
     if (saved) {
       try {
         const parsed: MarketplaceItem[] = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const existingIds = new Set(parsed.map(i => i.id));
-          const missing = INITIAL_MARKETPLACE_ITEMS.filter(i => !existingIds.has(i.id));
-          return [...parsed, ...missing];
+        if (Array.isArray(parsed)) {
+          parsed.forEach(i => {
+            if (!deletedIds.has(i.id)) {
+              if (i.id.startsWith('mkt-raizer-') && initialMap.has(i.id)) {
+                const base = initialMap.get(i.id)!;
+                itemMap.set(i.id, {
+                  ...i,
+                  priceBrl: base.priceBrl,
+                  originalPriceBrl: base.originalPriceBrl,
+                  unit: base.unit,
+                  condition: base.condition,
+                  description: base.description,
+                  discountCoupon: base.discountCoupon,
+                  affiliateUrl: base.affiliateUrl,
+                });
+              } else {
+                itemMap.set(i.id, i);
+              }
+            }
+          });
         }
       } catch {
         // fallback
       }
     }
-    return INITIAL_MARKETPLACE_ITEMS;
+    return Array.from(itemMap.values());
   });
 
   // Hydrate local cache based on current authenticated user or guest
@@ -290,14 +322,81 @@ function MeliponaryApp() {
   // Real-time Firestore Subscription for Global Marketplace
   useEffect(() => {
     const unsubMarketplace = subscribeMarketplaceItems(
-      (items) => {
-        if (items && items.length > 0) {
-          const firestoreIds = new Set(items.map(i => i.id));
-          const baseRemaining = INITIAL_MARKETPLACE_ITEMS.filter(i => !firestoreIds.has(i.id));
-          setMarketplaceItems([...items, ...baseRemaining]);
-        } else {
-          setMarketplaceItems(INITIAL_MARKETPLACE_ITEMS);
+      (firestoreItems) => {
+        let localSaved: MarketplaceItem[] = [];
+        try {
+          const raw = localStorage.getItem('meliapp_marketplace');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) localSaved = parsed;
+          }
+        } catch {}
+
+        let deletedIds = new Set<string>();
+        try {
+          const rawDeleted = localStorage.getItem('meliapp_marketplace_deleted');
+          if (rawDeleted) {
+            const parsedDel = JSON.parse(rawDeleted);
+            if (Array.isArray(parsedDel)) deletedIds = new Set(parsedDel);
+          }
+        } catch {}
+
+        const initialMap = new Map(INITIAL_MARKETPLACE_ITEMS.map(i => [i.id, i]));
+
+        // 1. Initialize Map with all base initial items (140+ Raízer plants/seeds + partner items)
+        const itemMap = new Map<string, MarketplaceItem>();
+        INITIAL_MARKETPLACE_ITEMS.forEach(item => {
+          if (!deletedIds.has(item.id)) {
+            itemMap.set(item.id, item);
+          }
+        });
+
+        // 2. Overlay / add local items (custom items or modifications)
+        localSaved.forEach(item => {
+          if (!deletedIds.has(item.id)) {
+            if (item.id.startsWith('mkt-raizer-') && initialMap.has(item.id)) {
+              const base = initialMap.get(item.id)!;
+              itemMap.set(item.id, {
+                ...item,
+                priceBrl: base.priceBrl,
+                originalPriceBrl: base.originalPriceBrl,
+                unit: base.unit,
+                condition: base.condition,
+                description: base.description,
+                discountCoupon: base.discountCoupon,
+                affiliateUrl: base.affiliateUrl,
+              });
+            } else {
+              itemMap.set(item.id, item);
+            }
+          }
+        });
+
+        // 3. Overlay / add firestore items (cloud persisted items)
+        if (firestoreItems && firestoreItems.length > 0) {
+          firestoreItems.forEach(item => {
+            if (!deletedIds.has(item.id)) {
+              if (item.id.startsWith('mkt-raizer-') && initialMap.has(item.id)) {
+                const base = initialMap.get(item.id)!;
+                itemMap.set(item.id, {
+                  ...item,
+                  priceBrl: base.priceBrl,
+                  originalPriceBrl: base.originalPriceBrl,
+                  unit: base.unit,
+                  condition: base.condition,
+                  description: base.description,
+                  discountCoupon: base.discountCoupon,
+                  affiliateUrl: base.affiliateUrl,
+                });
+              } else {
+                itemMap.set(item.id, item);
+              }
+            }
+          });
         }
+
+        const merged = Array.from(itemMap.values());
+        setMarketplaceItems(merged);
       },
       (err) => {
         console.warn('Marketplace subscription notice:', err);
@@ -314,40 +413,97 @@ function MeliponaryApp() {
       id: `mkt-${Date.now()}`,
       createdAt: new Date().toISOString().split('T')[0],
     };
-    setMarketplaceItems([created, ...marketplaceItems]);
-    if (isAdmin) {
-      try {
-        await saveMarketplaceItem(created);
-      } catch (err) {
-        console.warn('Error saving marketplace item to Firestore:', err);
-      }
+    
+    // 1. Immediately update state
+    setMarketplaceItems((prev) => [created, ...prev.filter(i => i.id !== created.id)]);
+    
+    // 2. Immediately update localStorage
+    try {
+      const currentSaved = localStorage.getItem('meliapp_marketplace');
+      const list: MarketplaceItem[] = currentSaved ? JSON.parse(currentSaved) : [];
+      const updatedList = [created, ...list.filter(i => i.id !== created.id)];
+      localStorage.setItem('meliapp_marketplace', JSON.stringify(updatedList));
+    } catch (e) {
+      console.warn('Error saving marketplace item to localStorage:', e);
+    }
+
+    // 3. Save to Firestore
+    try {
+      await saveMarketplaceItem(created);
+    } catch (err) {
+      console.warn('Error saving marketplace item to Firestore:', err);
     }
   };
 
   const handleUpdateMarketplaceItem = async (updatedItem: MarketplaceItem) => {
-    setMarketplaceItems(marketplaceItems.map((i) => (i.id === updatedItem.id ? updatedItem : i)));
-    if (isAdmin) {
-      try {
-        await saveMarketplaceItem(updatedItem);
-      } catch (err) {
-        console.warn('Error updating marketplace item in Firestore:', err);
-      }
+    // 1. Immediately update state
+    setMarketplaceItems((prev) => prev.map((i) => (i.id === updatedItem.id ? updatedItem : i)));
+    
+    // 2. Immediately update localStorage
+    try {
+      const currentSaved = localStorage.getItem('meliapp_marketplace');
+      const list: MarketplaceItem[] = currentSaved ? JSON.parse(currentSaved) : [];
+      const updatedList = list.map((i) => (i.id === updatedItem.id ? updatedItem : i));
+      localStorage.setItem('meliapp_marketplace', JSON.stringify(updatedList));
+    } catch (e) {
+      console.warn('Error updating marketplace item in localStorage:', e);
+    }
+
+    // 3. Save to Firestore
+    try {
+      await saveMarketplaceItem(updatedItem);
+    } catch (err) {
+      console.warn('Error updating marketplace item in Firestore:', err);
     }
   };
 
   const handleDeleteMarketplaceItem = async (id: string) => {
-    setMarketplaceItems(marketplaceItems.filter((i) => i.id !== id));
-    if (isAdmin) {
-      try {
-        await deleteMarketplaceItem(id);
-      } catch (err) {
-        console.warn('Error deleting marketplace item in Firestore:', err);
+    // 1. Immediately update state
+    setMarketplaceItems((prev) => prev.filter((i) => i.id !== id));
+    
+    // 2. Immediately update localStorage & deleted tracker
+    try {
+      const rawDeleted = localStorage.getItem('meliapp_marketplace_deleted');
+      const delList: string[] = rawDeleted ? JSON.parse(rawDeleted) : [];
+      if (!delList.includes(id)) {
+        delList.push(id);
+        localStorage.setItem('meliapp_marketplace_deleted', JSON.stringify(delList));
       }
+
+      const currentSaved = localStorage.getItem('meliapp_marketplace');
+      const list: MarketplaceItem[] = currentSaved ? JSON.parse(currentSaved) : [];
+      const updatedList = list.filter((i) => i.id !== id);
+      localStorage.setItem('meliapp_marketplace', JSON.stringify(updatedList));
+    } catch (e) {
+      console.warn('Error deleting marketplace item in localStorage:', e);
+    }
+
+    // 3. Delete from Firestore
+    try {
+      await deleteMarketplaceItem(id);
+    } catch (err) {
+      console.warn('Error deleting marketplace item in Firestore:', err);
     }
   };
 
   const handleClearMarketplaceItems = () => {
     setMarketplaceItems([]);
+    localStorage.setItem('meliapp_marketplace', JSON.stringify([]));
+  };
+
+  const handleRestoreDefaultCatalog = async () => {
+    // 1. Clear deleted list
+    localStorage.removeItem('meliapp_marketplace_deleted');
+    // 2. Restore local state with all 140+ Raizer and partner items
+    setMarketplaceItems(INITIAL_MARKETPLACE_ITEMS);
+    // 3. Update localStorage
+    localStorage.setItem('meliapp_marketplace', JSON.stringify(INITIAL_MARKETPLACE_ITEMS));
+    // 4. Persist to Firestore
+    try {
+      await restoreMarketplaceDefaults();
+    } catch (err) {
+      console.warn('Error restoring default catalog in Firestore:', err);
+    }
   };
 
   // Handlers for Flora
@@ -814,6 +970,7 @@ function MeliponaryApp() {
             onUpdateItem={handleUpdateMarketplaceItem}
             onDeleteItem={handleDeleteMarketplaceItem}
             onClearItems={handleClearMarketplaceItems}
+            onRestoreDefaultCatalog={handleRestoreDefaultCatalog}
             initialSearchQuery={marketplaceSearchQuery}
             initialCategory={marketplaceCategory}
             targetItemId={marketplaceTargetItemId}

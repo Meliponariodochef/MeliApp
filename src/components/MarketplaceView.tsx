@@ -40,7 +40,8 @@ import {
   Trash2,
   Wrench,
   LayoutGrid,
-  Pencil
+  Pencil,
+  RotateCcw
 } from 'lucide-react';
 import { MarketplaceItem, MarketplaceCategory, AffiliatePlatform, SavedAffiliateLink } from '../types';
 import { AffiliateGuideModal } from './AffiliateGuideModal';
@@ -53,6 +54,7 @@ interface MarketplaceViewProps {
   onUpdateItem?: (item: MarketplaceItem) => void;
   onDeleteItem?: (id: string) => void;
   onClearItems?: () => void;
+  onRestoreDefaultCatalog?: () => void;
   initialSearchQuery?: string;
   initialCategory?: string;
   targetItemId?: string | null;
@@ -125,6 +127,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   onUpdateItem,
   onDeleteItem,
   onClearItems,
+  onRestoreDefaultCatalog,
   initialSearchQuery,
   initialCategory,
   targetItemId,
@@ -142,6 +145,17 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   const [isAffiliateGuideOpen, setIsAffiliateGuideOpen] = useState<boolean>(false);
   const [viewingItem, setViewingItem] = useState<MarketplaceItem | null>(null);
   const [copiedCouponId, setCopiedCouponId] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Auto-hide toast notification
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => {
+        setToastMessage(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
 
   // Sync with prop changes when navigating from Flora Catalog
   useEffect(() => {
@@ -354,28 +368,31 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
       return;
     }
 
-    const payload = {
-      title: formData.title,
+    const price = parseFloat(formData.priceBrl) || 0;
+    const originalPrice = formData.originalPriceBrl ? parseFloat(formData.originalPriceBrl) : undefined;
+
+    const payload: Omit<MarketplaceItem, 'id' | 'createdAt'> = {
+      title: formData.title.trim(),
       category: formData.category,
-      priceBrl: parseFloat(formData.priceBrl) || 0,
-      originalPriceBrl: formData.originalPriceBrl ? parseFloat(formData.originalPriceBrl) : undefined,
-      unit: formData.unit || 'por unidade',
-      sellerName: isAffiliatePost ? (formData.sellerName || `${formData.affiliatePlatform} Oficial`) : formData.sellerName,
-      sellerCityState: isAffiliatePost ? (formData.sellerCityState || 'Envio Nacional / Internacional') : (formData.sellerCityState || 'Não informado'),
-      sellerPhoneWhatsapp: isAffiliatePost ? undefined : formData.sellerPhoneWhatsapp,
-      sellerEmail: formData.sellerEmail || undefined,
+      priceBrl: price,
+      ...(originalPrice ? { originalPriceBrl: originalPrice } : {}),
+      unit: formData.unit?.trim() || 'por unidade',
+      sellerName: isAffiliatePost ? (formData.sellerName?.trim() || `${formData.affiliatePlatform} Oficial`) : (formData.sellerName?.trim() || 'Meliponicultor'),
+      sellerCityState: isAffiliatePost ? (formData.sellerCityState?.trim() || 'Envio Nacional') : (formData.sellerCityState?.trim() || 'Brasil'),
+      ...(!isAffiliatePost && formData.sellerPhoneWhatsapp ? { sellerPhoneWhatsapp: formData.sellerPhoneWhatsapp.trim() } : {}),
+      ...(formData.sellerEmail ? { sellerEmail: formData.sellerEmail.trim() } : {}),
       verifiedSeller: true,
       rating: editingItem?.rating || 5.0,
       reviewCount: editingItem?.reviewCount || (isAffiliatePost ? Math.floor(Math.random() * 50 + 10) : 1),
-      description: formData.description,
-      imageUrl: formData.imageUrl || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80',
+      description: formData.description.trim(),
+      imageUrl: formData.imageUrl?.trim() || 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80',
       deliveryOptions: formData.deliveryOptions.length > 0 ? formData.deliveryOptions : ['Correios'],
       condition: formData.condition,
       featured: editingItem ? editingItem.featured : true,
       isAffiliate: isAffiliatePost,
-      affiliatePlatform: isAffiliatePost ? formData.affiliatePlatform : undefined,
-      affiliateUrl: isAffiliatePost ? formData.affiliateUrl : undefined,
-      discountCoupon: formData.discountCoupon ? formData.discountCoupon.trim().toUpperCase() : undefined,
+      ...(isAffiliatePost && formData.affiliatePlatform ? { affiliatePlatform: formData.affiliatePlatform } : {}),
+      ...(isAffiliatePost && formData.affiliateUrl ? { affiliateUrl: formData.affiliateUrl.trim() } : {}),
+      ...(formData.discountCoupon ? { discountCoupon: formData.discountCoupon.trim().toUpperCase() } : {}),
     };
 
     if (editingItem && onUpdateItem) {
@@ -383,8 +400,14 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         ...editingItem,
         ...payload,
       });
+      setToastMessage(`Produto "${payload.title}" atualizado com sucesso na Vitrine!`);
     } else {
       onAddItem(payload);
+      setToastMessage(`Produto "${payload.title}" gravado e publicado na Vitrine!`);
+      if (searchQuery) setSearchQuery('');
+      if (payload.isAffiliate && filterSource === 'local') setFilterSource('all');
+      if (!payload.isAffiliate && filterSource === 'affiliate') setFilterSource('all');
+      setSelectedCategory('all');
     }
 
     setIsModalOpen(false);
@@ -419,30 +442,30 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
       count: countAll,
     },
     {
-      id: 'utensilios',
-      label: 'Utensílios',
-      description: 'Caixas, equipamentos & insumos',
-      icon: Wrench,
-      count: countUtensilios,
-    },
-    {
       id: 'plantas',
-      label: 'Plantas',
-      description: 'Mudas, sementes & Raizer',
+      label: 'Plantas & Sementes',
+      description: 'Mudas e sementes Viveiro Raízer',
       icon: Sprout,
       count: countPlantas,
     },
     {
+      id: 'utensilios',
+      label: 'Caixas & Utensílios',
+      description: 'Caixas INPA, extratores e insumos',
+      icon: Wrench,
+      count: countUtensilios,
+    },
+    {
       id: 'livros',
-      label: 'Livros',
+      label: 'Livros & Guias',
       description: 'Manuais práticos & guias ASF',
       icon: BookOpen,
       count: countLivros,
     },
     {
       id: 'afiliados',
-      label: 'Afiliados',
-      description: 'Ofertas parceiras com cupom',
+      label: 'Ofertas & Afiliados',
+      description: 'Parceiros com cupom de desconto',
       icon: ShoppingBag,
       count: countAfiliados,
     },
@@ -512,6 +535,25 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       
+      {/* Toast Feedback Notification */}
+      {toastMessage && (
+        <div className="fixed top-20 right-4 sm:right-8 z-50 bg-emerald-900 text-amber-200 px-5 py-3.5 rounded-2xl shadow-2xl border-2 border-amber-400 flex items-center space-x-3 animate-in slide-in-from-top-4 duration-200">
+          <div className="w-8 h-8 rounded-xl bg-amber-400 text-emerald-950 flex items-center justify-center flex-shrink-0 font-black">
+            <Check className="w-5 h-5 text-emerald-950 stroke-[3]" />
+          </div>
+          <div className="pr-2">
+            <h4 className="font-extrabold text-sm text-white">Sucesso!</h4>
+            <p className="text-xs text-amber-200 font-medium">{toastMessage}</p>
+          </div>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="p-1 hover:bg-emerald-800 text-amber-300 rounded-lg transition-colors cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Top Admin Control Bar (When in Admin Mode) */}
       {isAdmin && (
         <div className="bg-gradient-to-r from-amber-950 via-stone-900 to-emerald-950 text-amber-200 p-4 sm:p-5 rounded-3xl border-2 border-amber-500 shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
@@ -540,6 +582,20 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
               <Plus className="w-4 h-4 stroke-[3]" />
               <span>+ Adicionar Produto / Link</span>
             </button>
+
+            {onRestoreDefaultCatalog && (
+              <button
+                onClick={() => {
+                  onRestoreDefaultCatalog();
+                  setToastMessage('Catálogo Oficial da Raízer e parceiros restaurado com sucesso!');
+                }}
+                className="bg-emerald-900 hover:bg-emerald-800 text-emerald-100 border border-emerald-500/70 font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center space-x-1.5 transition-all cursor-pointer shadow-xs"
+                title="Recarregar e sincronizar catálogo completo da Raízer"
+              >
+                <RotateCcw className="w-4 h-4 text-amber-300" />
+                <span>Restaurar Catálogo Raízer</span>
+              </button>
+            )}
 
             {onClearItems && items.length > 0 && (
               <button
@@ -609,7 +665,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
         </div>
       </div>
 
-      {/* Filter Source Tabs (All / Local / Affiliate Deals) */}
+      {/* Filter Source Tabs (All / Local / Affiliate Deals) & Action Button */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center space-x-2 bg-stone-100 p-1 rounded-2xl border border-stone-200 text-xs font-bold">
           <button
@@ -643,6 +699,30 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
           >
             <Store className="w-3.5 h-3.5 text-amber-600" />
             <span>Produtores & Caixas ({items.filter((i) => !i.isAffiliate).length})</span>
+          </button>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          {onRestoreDefaultCatalog && (
+            <button
+              onClick={() => {
+                onRestoreDefaultCatalog();
+                setToastMessage('Catálogo Oficial da Raízer e parceiros sincronizado com sucesso!');
+              }}
+              className="bg-emerald-800 hover:bg-emerald-700 text-amber-200 border border-emerald-600/60 font-bold px-3.5 py-2.5 rounded-2xl text-xs flex items-center space-x-1.5 shadow-xs transition-all cursor-pointer"
+              title="Restaurar mudas e sementes do viveiro Raízer"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+              <span>Sincronizar Catálogo Raízer</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => handleOpenBlankAddModal(isAdmin)}
+            className="bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black px-4 py-2.5 rounded-2xl text-xs flex items-center space-x-2 shadow-xs transition-all cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Cadastrar Novo Produto</span>
           </button>
         </div>
       </div>
