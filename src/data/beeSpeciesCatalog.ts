@@ -957,7 +957,7 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "imageUrl": "/species/mirim_guacu_worker.jpg",
     "entryImageUrl": "/species/mirim_guaçu_entry.jpg",
     "nestImageUrl": "/species/mirim_guaçu_entry.jpg",
-    "photoCredit": "Foto: Victor Hugo Rebecchi (iNaturalist) & Guia DDPA/SEAPI RS",
+    "photoCredit": "Foto: Carlos Alexandre Mattos Raposo (iNaturalist CC BY)",
     "entryPhotoCredit": "Foto: Cristiano Maddalena (Entrada de resina e cerume)",
     "morphologyNotes": "Corpo com 5 mm preto brilhante. Manchas amarelas na região central do clípeo e supraclipeal. Faixas laterais dos olhos mais estreitas que em P. emerina.",
     "nestEntranceNotes": "Entrada circular reduzida de própolis permitindo passagem de 1 abelha por vez. Internamente constrói trabéculas de cerume formando verdadeira rede de andaimes.",
@@ -975,12 +975,12 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "url_foto_entrada": "/species/mirim_guaçu_entry.jpg",
     "guideImageUrl": "/species/mirim_guacu_worker.jpg",
     "url_foto_guia": "/species/mirim_guacu_worker.jpg",
-    "guidePhotoCredit": "Foto: Detalhe Morfológico e Diagnóstico Taxonômico (SEAPI/DDPA RS & iNaturalist)",
+    "guidePhotoCredit": "Foto: Carlos Alexandre Mattos Raposo (iNaturalist CC BY)",
     "images": {
       "worker": {
         "url": "/species/mirim_guacu_worker.jpg",
-        "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/603952616/large.jpg",
-        "credit": "Foto: Victor Hugo Rebecchi (iNaturalist) & Guia DDPA/SEAPI RS",
+        "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/422468935/large.jpeg",
+        "credit": "Foto: Carlos Alexandre Mattos Raposo (iNaturalist CC BY)",
         "title": "Operária de Mirim-Guaçu",
         "alt": "Operária de Mirim-Guaçu (Plebeia remota (Holmberg, 1903))"
       },
@@ -993,8 +993,8 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
       },
       "guide": {
         "url": "/species/mirim_guacu_worker.jpg",
-        "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/603952616/large.jpg",
-        "credit": "Foto: Detalhe Morfológico e Diagnóstico Taxonômico (SEAPI/DDPA RS & iNaturalist)",
+        "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/422468935/large.jpeg",
+        "credit": "Foto: Carlos Alexandre Mattos Raposo (iNaturalist CC BY)",
         "title": "Diagnose de Mirim-Guaçu",
         "alt": "Guia morfológico e identificação de Mirim-Guaçu"
       },
@@ -1101,7 +1101,7 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "imageUrl": "/species/irapua_worker.jpg",
     "entryImageUrl": "/species/irapua_entry.jpg",
     "nestImageUrl": "/species/irapua_entry.jpg",
-    "photoCredit": "Foto: Cristiano Menezes (Embrapa Meio Ambiente - Pernas ferrugíneas)",
+    "photoCredit": "Foto: Rodrigo Menezes (Ironman br - Wikimedia Commons / CC-BY-SA 4.0)",
     "entryPhotoCredit": "Foto: Fernando Kluwe Dias (Ninho aéreo com septos verticais - SEAPI/DDPA RS)",
     "morphologyNotes": "Corpo preto de 6,5-7,5 mm, pernas traseiras com tíbias e tarsos alaranjados/ferrugíneos. Asas translúcidas esfumadas.",
     "nestEntranceNotes": "Ninho aéreo volumoso em formato oval construído de fibras vegetais trituradas, barro e resinas.",
@@ -1119,12 +1119,12 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "url_foto_entrada": "/species/irapua_entry.jpg",
     "guideImageUrl": "/species/irapua_worker.jpg",
     "url_foto_guia": "/species/irapua_worker.jpg",
-    "guidePhotoCredit": "Foto: Fernando Kluwe Dias (Operária em flor - SEAPI/DDPA RS)",
+    "guidePhotoCredit": "Foto: Rodrigo Menezes (Ironman br - Wikimedia Commons / CC-BY-SA 4.0)",
     "images": {
       "worker": {
         "url": "/species/irapua_worker.jpg",
-        "fallbackUrl": "https://static.inaturalist.org/photos/578253208/large.jpg",
-        "credit": "Foto: Cristiano Menezes (Embrapa Meio Ambiente - Pernas ferrugíneas)",
+        "fallbackUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Trigona_spinipes_on_leaf.jpg/1280px-Trigona_spinipes_on_leaf.jpg",
+        "credit": "Foto: Rodrigo Menezes (Ironman br - Wikimedia Commons / CC-BY-SA 4.0)",
         "title": "Operária de Irapuá / Arapuá / Abelha-Cachorro",
         "alt": "Operária de Irapuá / Arapuá / Abelha-Cachorro (Trigona spinipes (Fabricius, 1793))"
       },
@@ -1137,8 +1137,8 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
       },
       "guide": {
         "url": "/species/irapua_worker.jpg",
-        "fallbackUrl": "https://static.inaturalist.org/photos/578253208/large.jpg",
-        "credit": "Foto: Fernando Kluwe Dias (Operária em flor - SEAPI/DDPA RS)",
+        "fallbackUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Trigona_spinipes_on_leaf.jpg/1280px-Trigona_spinipes_on_leaf.jpg",
+        "credit": "Foto: Rodrigo Menezes (Ironman br - Wikimedia Commons / CC-BY-SA 4.0)",
         "title": "Diagnose de Irapuá / Arapuá / Abelha-Cachorro",
         "alt": "Guia morfológico e identificação de Irapuá / Arapuá / Abelha-Cachorro"
       },
@@ -1245,7 +1245,7 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "imageUrl": "/species/urucu_nordestina_worker.jpg",
     "entryImageUrl": "/species/urucu_nordestina_entry.jpg",
     "nestImageUrl": "/species/urucu_nordestina_entry.jpg",
-    "photoCredit": "Foto: Livro de Meliponicultura & Embrapa Recursos Genéticos",
+    "photoCredit": "Foto: abelhas.org",
     "entryPhotoCredit": "Foto: Embrapa (Entrada de geoprópolis)",
     "morphologyNotes": "Corpo com 10 a 12 mm. Tórax coberto por densa camada de pelos amarelo-dourados aveludados. Abdômen preto com finas linhas claras marginais.",
     "nestEntranceNotes": "Orifício circular no centro de estrias convergentes de barro/geoprópolis, permitindo uma abelha por vez.",
@@ -1263,12 +1263,12 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
     "url_foto_entrada": "/species/urucu_nordestina_entry.jpg",
     "guideImageUrl": "/species/urucu_nordestina_worker.jpg",
     "url_foto_guia": "/species/urucu_nordestina_worker.jpg",
-    "guidePhotoCredit": "Foto: Detalhe Morfológico e Diagnóstico Taxonômico (SEAPI/DDPA RS & iNaturalist)",
+    "guidePhotoCredit": "Foto: abelhas.org",
     "images": {
       "worker": {
         "url": "/species/urucu_nordestina_worker.jpg",
         "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/456005855/large.jpg",
-        "credit": "Foto: Livro de Meliponicultura & Embrapa Recursos Genéticos",
+        "credit": "Foto: abelhas.org",
         "title": "Operária de Uruçu-Nordestina / Uruçu-Verdadeira",
         "alt": "Operária de Uruçu-Nordestina / Uruçu-Verdadeira (Melipona scutellaris Latreille, 1811)"
       },
@@ -1282,7 +1282,7 @@ export const COMPREHENSIVE_BEE_SPECIES: BeeSpecies[] = [
       "guide": {
         "url": "/species/urucu_nordestina_worker.jpg",
         "fallbackUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/456005855/large.jpg",
-        "credit": "Foto: Detalhe Morfológico e Diagnóstico Taxonômico (SEAPI/DDPA RS & iNaturalist)",
+        "credit": "Foto: abelhas.org",
         "title": "Diagnose de Uruçu-Nordestina / Uruçu-Verdadeira",
         "alt": "Guia morfológico e identificação de Uruçu-Nordestina / Uruçu-Verdadeira"
       },
